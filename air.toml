@@ -1,0 +1,36 @@
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "/var/tmp"
+
+[build]
+args_bin = []
+bin = "./var/tmp/web"
+cmd = "go build -o ./var/tmp/web ./cmd/web"
+delay = 1000
+exclude_dir = ["testdata", "scripts", "var"]
+exclude_file = []
+exclude_regex = ["_test.go"]
+include_ext = ["go", "gohtml", "html"]
+kill_delay = "1000s" # Delay before killing the process
+log = "/var/tmp/build-errors.log" # File to write build errors
+send_interrupt = true
+stop_on_error = true
+
+[color]
+app = "" # Color for app output
+build = "yellow" # Color for build output
+main = "magenta" # Color for main messages
+runner = "green" # Color for runner messages
+watcher = "cyan" # Color for watcher messages
+
+[log]
+silent = true
+main_only = false
+time = true
+
+[misc]
+clean_on_exit = true
+
+[screen]
+clear_on_rebuild = true
+keep_scroll = true
