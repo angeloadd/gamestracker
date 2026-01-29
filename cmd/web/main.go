@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"github.com/angeloadd/gamestracker/internal/config"
 	"github.com/angeloadd/gamestracker/internal/logging"
+	"github.com/angeloadd/gamestracker/internal/render"
 	"github.com/angeloadd/gamestracker/internal/server"
 	"io"
 	"log/slog"
 	"net/http"
 	"os"
+	"path"
 	"sync"
 	"time"
 )
@@ -30,10 +32,22 @@ func run(
 	_ io.Reader,
 	_, stderr io.Writer,
 ) error {
-	cfg := config.NewConfig(lookenv)
+	dir := path.Dir(path.Dir(path.Dir(os.Args[0])))
+	cfg := config.NewConfig(lookenv, dir)
 	log := logging.NewLogger(cfg.Logs, stderr)
 
-	srv := server.NewServer(ctx, cfg, log)
+	renderer := render.NewRenderer(cfg, log)
+
+	if cfg.IsProduction() {
+		cache, err := renderer.CreateTemplateCache()
+		if err != nil {
+			return fmt.Errorf("error creating renderer: %v", err)
+		}
+
+		renderer.TemplateCache = cache
+	}
+
+	srv := server.NewServer(ctx, cfg, log, renderer)
 	httpServer := &http.Server{
 		Addr:              fmt.Sprintf(":%d", cfg.App.Port),
 		Handler:           srv,

@@ -4,7 +4,7 @@ tmp_dir = "/var/tmp"
 
 [build]
 args_bin = []
-bin = "./var/tmp/web"
+entrypoint = "./var/tmp/web"
 cmd = "go build -o ./var/tmp/web ./cmd/web"
 delay = 1000
 exclude_dir = ["testdata", "scripts", "var"]

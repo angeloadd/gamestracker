@@ -1,14 +1,21 @@
 package server
 
 import (
-	"fmt"
+	"github.com/angeloadd/gamestracker/internal/render"
 	"log/slog"
 	"net/http"
 )
 
-func handleHome() http.HandlerFunc {
+func handleHome(renderer *render.Renderer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintf(w, "Hello, World!")
+		td := &render.TemplateData{
+			StringMap: map[string]string{
+				"title": "Home",
+				"name":  "Angelo",
+			},
+		}
+
+		err := renderer.Template(w, r, "home.page.gohtml", td)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

@@ -1,0 +1,10 @@
+{{define "content"}}
+    <div>
+        <h1> Hello, {{if eq (len .StringMap.name) 0}}World{{else}}{{.StringMap.name}}{{end}}!
+        </h1>
+    </div>
+{{end}}
+
+{{define "title"}}
+    {{.StringMap.title}}
+{{end}}

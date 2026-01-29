@@ -38,12 +38,13 @@ type Logs struct {
 	Level string
 }
 
-func NewConfig(lookenv func(string) (string, bool)) Config {
+func NewConfig(lookenv func(string) (string, bool), rootPath string) Config {
 	getString := getEnvAsScalar[string](lookenv)
 	getInt := getEnvAsScalar[int](lookenv)
 	getBool := getEnvAsScalar[bool](lookenv)
 
 	return Config{
+		RootPath: rootPath,
 		App: App{
 			Name:  getString("APP_NAME", "golangapp"),
 			Env:   getString("APP_ENV", "local"),
