@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/angeloadd/gamestracker/internal/config"
 	"github.com/angeloadd/gamestracker/internal/render"
+	"io/fs"
 	"log/slog"
 	"net/http"
 )
@@ -12,7 +13,8 @@ func NewServer(
 	ctx context.Context,
 	cfg config.Config,
 	log *slog.Logger,
-	renderer *render.Renderer,
+	publicFS fs.FS,
+	renderer *render.View,
 ) http.Handler {
 	mux := http.NewServeMux()
 
@@ -21,6 +23,7 @@ func NewServer(
 		mux,
 		cfg,
 		log,
+		publicFS,
 		renderer,
 	)
 

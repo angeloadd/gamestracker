@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func handleHome(renderer *render.Renderer) http.HandlerFunc {
+func handleHome(renderer *render.View) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		td := &render.TemplateData{
 			StringMap: map[string]string{

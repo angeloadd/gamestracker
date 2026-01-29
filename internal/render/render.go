@@ -12,9 +12,10 @@ import (
 	"path/filepath"
 )
 
-type Renderer struct {
+type View struct {
 	cfg           config.Config
 	log           *slog.Logger
+	funcMap       template.FuncMap
 	TemplateCache map[string]*template.Template
 }
 
@@ -30,13 +31,12 @@ type TemplateData struct {
 	//Form      *forms.Form
 }
 
-var functions = template.FuncMap{}
-
-// NewRenderer sets the config for the template package
-func NewRenderer(cfg config.Config, log *slog.Logger) *Renderer {
-	return &Renderer{
-		cfg: cfg,
-		log: log,
+// NewView sets the config for the template package
+func NewView(cfg config.Config, log *slog.Logger) *View {
+	return &View{
+		cfg:     cfg,
+		log:     log,
+		funcMap: template.FuncMap{},
 	}
 }
 
@@ -50,13 +50,13 @@ func AddDefaultData(td *TemplateData, _ *http.Request) *TemplateData {
 }
 
 // Template renders a template
-func (r *Renderer) Template(w http.ResponseWriter, req *http.Request, tmpl string, td *TemplateData) error {
+func (r *View) Template(w http.ResponseWriter, req *http.Request, tmpl string, td *TemplateData) error {
 	var tc map[string]*template.Template
 
-	if r.cfg.IsProduction() {
-		tc = r.TemplateCache
-	} else {
+	if r.cfg.App.Debug {
 		tc, _ = r.CreateTemplateCache()
+	} else {
+		tc = r.TemplateCache
 	}
 
 	t, ok := tc[tmpl]
@@ -80,7 +80,7 @@ func (r *Renderer) Template(w http.ResponseWriter, req *http.Request, tmpl strin
 
 }
 
-func (r *Renderer) CreateTemplateCache() (map[string]*template.Template, error) {
+func (r *View) CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 	pathToTemplates := path.Join("web", "templates")
 
@@ -99,7 +99,7 @@ func (r *Renderer) CreateTemplateCache() (map[string]*template.Template, error) 
 	}
 
 	for _, page := range pages {
-		ts, err := template.New("base.layout.gohtml").Funcs(functions).ParseFiles(append(layouts, page)...)
+		ts, err := template.New("base.layout.gohtml").Funcs(r.funcMap).ParseFiles(append(layouts, page)...)
 		if err != nil {
 			return myCache, err
 		}

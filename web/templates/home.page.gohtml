@@ -1,10 +1,72 @@
 {{define "content"}}
-    <div>
-        <h1> Hello, {{if eq (len .StringMap.name) 0}}World{{else}}{{.StringMap.name}}{{end}}!
-        </h1>
+    <div class="w-full flex items-center justify-center max-w-4xl px-4">
+        <table class="w-1/2 border-collapse bg-white shadow-lg rounded-lg overflow-hidden">
+            <thead>
+                <tr class="text-white">
+                    <th class="w-2/6 px-4 py-3 text-left bg-gray-800">Type</th>
+                    <th class="w-5/12 px-4 py-3 text-left bg-gray-100">Column 2</th>
+                    <th class="w-5/12 px-4 py-3 text-left bg-gray-100">Column 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b bg-blue-100 hover:bg-blue-200">
+                    <td class="px-4 py-3">Blue</td>
+                    <td class="px-4 py-3">
+                        <label for="blue-1"></label>
+                        <input class="w-1/2" id="blue-1" type="number">
+                    </td>
+                    <td class="px-4 py-3">
+                        <label for="blue-2"></label>
+                        <input class="w-1/2" id="blue-2" type="number">
+                    </td>
+                </tr>
+                <tr class="border-b bg-green-100 hover:bg-green-200">
+                    <td class="px-4 py-3">Green</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-yellow-100 hover:bg-yellow-200">
+                    <td class="px-4 py-3">Yellow</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-purple-100 hover:bg-purple-200">
+                    <td class="px-4 py-3">Type 4</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-gray-100 hover:bg-gray-200">
+                    <td class="px-4 py-3">Type 5</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-green-200 hover:bg-green-300">
+                    <td class="px-4 py-3">Type 6</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-yellow-200 hover:bg-yellow-300">
+                    <td class="px-4 py-3">Type 7</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="border-b bg-red-100 hover:bg-red-200">
+                    <td class="px-4 py-3">Type 8</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">Type 9</td>
+                    <td class="px-4 py-3">Data</td>
+                    <td class="px-4 py-3">Data</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 {{end}}
 
 {{define "title"}}
-    {{.StringMap.title}}
+    {{$title := index .StringMap "title"}}
+
+    {{$title}}
 {{end}}

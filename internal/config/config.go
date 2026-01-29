@@ -11,18 +11,18 @@ const (
 )
 
 type Config struct {
-	RootPath string
-	App      App
-	DB       DB
-	Logs     Logs
+	App  App
+	DB   DB
+	Logs Logs
 }
 
 type App struct {
-	Name  string
-	Env   string
-	Port  int
-	Host  string
-	Debug bool
+	Name             string
+	Env              string
+	Port             int
+	Host             string
+	Debug            bool
+	UseTemplateCache bool
 }
 
 type DB struct {
@@ -38,13 +38,12 @@ type Logs struct {
 	Level string
 }
 
-func NewConfig(lookenv func(string) (string, bool), rootPath string) Config {
+func NewConfig(lookenv func(string) (string, bool)) Config {
 	getString := getEnvAsScalar[string](lookenv)
 	getInt := getEnvAsScalar[int](lookenv)
 	getBool := getEnvAsScalar[bool](lookenv)
 
 	return Config{
-		RootPath: rootPath,
 		App: App{
 			Name:  getString("APP_NAME", "golangapp"),
 			Env:   getString("APP_ENV", "local"),
