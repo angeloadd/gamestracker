@@ -28,7 +28,11 @@ func NewLogger(cfg config.Logs, stderr io.Writer) *slog.Logger {
 		slogLevel = slog.LevelInfo
 	}
 
-	logger := makeLogger(stderr, slogLevel)
+	logger := slog.New(slog.NewJSONHandler(stderr, &slog.HandlerOptions{
+		Level:       slogLevel,
+		AddSource:   true,
+		ReplaceAttr: redactSensitiveFields,
+	}))
 
 	if !ok {
 		logger.Warn(fmt.Sprintf("LogLevel[%s] not valid, using 'Info' as default. Accepted: nope, debug, info, warn, error", logLevel))
@@ -37,9 +41,14 @@ func NewLogger(cfg config.Logs, stderr io.Writer) *slog.Logger {
 	return logger
 }
 
-func makeLogger(w io.Writer, level slog.Level) *slog.Logger {
-	return slog.New(slog.NewJSONHandler(w, &slog.HandlerOptions{
-		Level:     level,
-		AddSource: true,
-	}))
+func redactSensitiveFields(_ []string, a slog.Attr) slog.Attr {
+	sensitiveKeys := []string{"password", "token", "secret", "authorization"}
+
+	for _, key := range sensitiveKeys {
+		if a.Key == key {
+			return slog.String(a.Key, "[REDACTED]")
+		}
+	}
+
+	return a
 }

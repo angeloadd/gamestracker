@@ -13,7 +13,7 @@ func addRoutes(
 	_ config.Config,
 	log *slog.Logger,
 ) {
-	mux.Handle("/", handleHome())
-	mux.HandleFunc("/healthz", handleHealthz(log))
+	mux.HandleFunc("GET /{$}", handleHome())
+	mux.HandleFunc("GET /healthz", handleHealth(log))
 	mux.Handle("/", http.NotFoundHandler())
 }

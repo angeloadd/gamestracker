@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -36,12 +35,16 @@ func (rw *responseWriter) WriteHeader(code int) {
 func logMiddleware(log *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.DebugContext(r.Context(), fmt.Sprintf("incoming request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path))
+			log.DebugContext(r.Context(), "incoming request",
+				"remote_addr", r.RemoteAddr,
+				"method", r.Method,
+				"path", r.URL.Path,
+			)
 
 			start := time.Now()
 			wrapped := wrapResponseWriter(w)
-			next.ServeHTTP(w, r)
-			log.Info("",
+			next.ServeHTTP(wrapped, r)
+			log.InfoContext(r.Context(), "http request",
 				"status", wrapped.Status(),
 				"method", r.Method,
 				"path", r.URL.EscapedPath(),

@@ -13,14 +13,12 @@ func handleHome() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		w.WriteHeader(200)
 	}
 }
 
-func handleHealthz(log *slog.Logger) http.HandlerFunc {
+func handleHealth(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Info("healthz endpoint served")
+		log.InfoContext(r.Context(), "healthz endpoint served")
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
